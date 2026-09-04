@@ -1,0 +1,1 @@
+{"resource":"https://reach.wellfound.com/mcp","authorization_servers":["https://reach.wellfound.com"],"scopes_supported":["projects:read","agents:read","agents:write","candidates:read","candidates:write","company_lists:read","company_lists:write"],"bearer_methods_supported":["header"]}

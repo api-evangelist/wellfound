@@ -1,0 +1,104 @@
+generated: '2026-09-04'
+method: probed
+source: >-
+  https://wellfound.com/.well-known/openid-configuration (200),
+  https://wellfound.com/.well-known/oauth-protected-resource (200),
+  https://reach.wellfound.com/.well-known/oauth-authorization-server (200),
+  https://reach.wellfound.com/.well-known/oauth-protected-resource (200)
+docs: null
+docs_note: >-
+  No scopes / permissions reference page exists on any Wellfound property. The scope
+  vocabulary below was read verbatim out of the scopes_supported arrays of the four
+  discovery documents; the descriptions are our plain reading of each scope name and are
+  marked as such. Wellfound publishes no prose definition of any of these scopes.
+
+authorization_servers:
+- issuer: https://wellfound.com
+  scope_count: 9
+  protects: https://wellfound.com/api/mcp
+  scopes:
+  - name: message
+    description: legacy AngelList-era scope - no published definition
+    described_by_provider: false
+    used_by_live_resource: false
+  - name: dealflow
+    description: legacy AngelList-era scope - no published definition
+    described_by_provider: false
+    used_by_live_resource: false
+  - name: comment
+    description: legacy AngelList-era scope - no published definition
+    described_by_provider: false
+    used_by_live_resource: false
+  - name: email
+    description: read the authenticated member's email address (our reading of the name)
+    described_by_provider: false
+    used_by_live_resource: false
+  - name: invest
+    description: legacy AngelList-era scope - no published definition
+    described_by_provider: false
+    used_by_live_resource: false
+  - name: accreditation
+    description: legacy AngelList-era scope - no published definition
+    described_by_provider: false
+    used_by_live_resource: false
+  - name: applications:read
+    description: read a recruiter's inbound job applications (our reading of the name)
+    described_by_provider: false
+    used_by_live_resource: true
+  - name: applications:accept
+    description: accept an inbound application - a WRITE scope with an irreversible-looking
+      effect on a candidate
+    described_by_provider: false
+    used_by_live_resource: true
+  - name: applications:reject
+    description: reject an inbound application - a WRITE scope with an irreversible-looking
+      effect on a candidate
+    described_by_provider: false
+    used_by_live_resource: true
+- issuer: https://reach.wellfound.com
+  scope_count: 7
+  protects: https://reach.wellfound.com/mcp
+  scopes:
+  - name: projects:read
+    description: read sourcing projects
+    described_by_provider: false
+    write: false
+  - name: agents:read
+    description: read the AI sourcing agents configured on the account
+    described_by_provider: false
+    write: false
+  - name: agents:write
+    description: create or modify AI sourcing agents
+    described_by_provider: false
+    write: true
+  - name: candidates:read
+    description: read candidates
+    described_by_provider: false
+    write: false
+  - name: candidates:write
+    description: create or modify candidates
+    described_by_provider: false
+    write: true
+  - name: company_lists:read
+    description: read company lists
+    described_by_provider: false
+    write: false
+  - name: company_lists:write
+    description: create or modify company lists
+    described_by_provider: false
+    write: true
+
+analysis:
+  total_scopes: 16
+  granularity: >-
+    The Reach server is cleanly resource:action scoped (7 scopes over 4 resources, read and
+    write split on each). The wellfound.com server is not: six of its nine scopes are bare
+    verbs or nouns inherited from the AngelList era with no separator and no published
+    definition, and only the three colon-scoped applications:* entries belong to the live MCP
+    resource. An agent asking for consent on this server cannot tell a user what "dealflow"
+    or "invest" would let it do.
+  least_privilege_possible: true
+  least_privilege_note: >-
+    Both servers do split read from write, so a read-only agent can be granted read-only
+    access. On the applications server the split is finer than usual - accept and reject are
+    separate scopes, so an agent can be permitted to accept but not reject, or the reverse.

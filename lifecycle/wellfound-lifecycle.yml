@@ -1,0 +1,73 @@
+generated: '2026-09-04'
+method: searched
+source: >-
+  https://status.wellfound.com/ (200), https://wellfound.statuspage.io/api/v2/summary.json
+  (200), https://wellfound.com/terms (200), plus live probes of the OAuth/MCP surface
+note: >-
+  Wellfound publishes no API versioning policy, no deprecation policy and no API changelog.
+  What it does publish is an operational status page. Everything below that is recorded as
+  absent was probed for and missed.
+
+status_page:
+  url: https://status.wellfound.com/
+  provider: Atlassian Statuspage
+  page_id: ltlsl5dwrb67
+  api: https://wellfound.statuspage.io/api/v2/summary.json
+  feeds:
+  - https://wellfound.statuspage.io/history.atom
+  - https://wellfound.statuspage.io/history.rss
+  http_status: 200
+  components_observed:
+  - Wellfound.com (Application)
+  - Wellfound.com (Background jobs)
+  - wellfound:ai (Application)
+  - wellfound:ai (Background jobs)
+  - Wellfound:ai
+  - Marketplace
+  - Landingpages
+  - Elasticsearch
+  note: >-
+    The component list is product- and infrastructure-shaped (application, background jobs,
+    Elasticsearch, plus mirrored Cloudflare / AWS / SendGrid / Iterable vendor status). No
+    component names either MCP server, so an agent depending on wellfound.com/api/mcp or
+    reach.wellfound.com/mcp has no status signal specific to the surface it calls.
+
+versioning:
+  scheme: none published
+  api_version_in_path: false
+  api_version_header: null
+  evidence: >-
+    Neither MCP endpoint carries a version segment (https://wellfound.com/api/mcp,
+    https://reach.wellfound.com/mcp) and neither returns a version header on the 401. The
+    MCP protocol version is negotiated in initialize, which is OAuth-gated, so the supported
+    protocol revisions could not be observed.
+  legacy_note: >-
+    A versioned REST surface once existed - the OAuth authorization server still mints
+    AngelList-era scopes (message, dealflow, comment, invest, accreditation) - but
+    https://api.angel.co/, https://wellfound.com/api/1/ and https://wellfound.com/api/1/me
+    all return 404. The API was retired without a published sunset notice; the scopes it
+    used are still advertised in
+    https://wellfound.com/.well-known/openid-configuration today.
+
+deprecation_policy:
+  published: false
+  sunset_header: not observed
+  deprecation_header: not observed
+  rfc8594: false
+  evidence: >-
+    No deprecation, sunset or versioning policy page exists on wellfound.com,
+    help.wellfound.com or reach.wellfound.com. /changelog is 404. The retirement of the
+    AngelList v1 REST API (above) is the concrete case: the endpoints are gone and no notice
+    remains reachable.
+
+sla:
+  published: false
+  evidence: >-
+    https://wellfound.com/terms (200) is a consumer/customer terms of service; no API-specific
+    SLA, uptime commitment or support-response commitment was found. The Scale tier at
+    https://wellfound.com/recruit/pricing is custom-priced and may carry one contractually,
+    but nothing is published.
+
+deprecated_operations: []
+deprecated_operations_note: no OpenAPI exists to derive deprecated operations from, and the
+  MCP tool lists are OAuth-gated.

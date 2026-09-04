@@ -1,0 +1,159 @@
+generated: '2026-09-04'
+method: probed
+source: >-
+  live probes of the Wellfound discovery stack plus
+  https://help.wellfound.com/article/1213-wellfound-ai-ats-connection-what-we-access-why-we-need-it-and-what-we-do-with-your-data
+note: >-
+  Every entry below is asserted against a document that was actually fetched. Where a
+  standard could not be confirmed it is recorded conforms:false with the reason, not omitted.
+
+conformance:
+- id: oauth2
+  name: OAuth 2.0 Authorization Framework (RFC 6749)
+  conforms: true
+  evidence: >-
+    https://wellfound.com/.well-known/oauth-authorization-server (200) and
+    https://reach.wellfound.com/.well-known/oauth-authorization-server (200) - both declare
+    authorization_endpoint, token_endpoint, response_types_supported ["code"] and
+    grant_types_supported ["authorization_code","refresh_token"].
+- id: rfc8414
+  name: OAuth 2.0 Authorization Server Metadata (RFC 8414)
+  conforms: true
+  evidence: >-
+    https://wellfound.com/.well-known/oauth-authorization-server (200, application/json) and
+    https://reach.wellfound.com/.well-known/oauth-authorization-server (200,
+    application/json), each carrying issuer + endpoint metadata at the registered path.
+- id: rfc9728
+  name: OAuth 2.0 Protected Resource Metadata (RFC 9728)
+  conforms: true
+  evidence: >-
+    https://wellfound.com/.well-known/oauth-protected-resource (200) and
+    https://reach.wellfound.com/.well-known/oauth-protected-resource (200), each declaring
+    resource, authorization_servers[], bearer_methods_supported and scopes_supported. Both
+    resources return a 401 whose WWW-Authenticate carries the resource_metadata parameter,
+    which is the RFC 9728 discovery handshake performed correctly. wellfound.com additionally
+    serves the path-suffixed canonical location
+    /.well-known/oauth-protected-resource/api/mcp.
+- id: rfc7636
+  name: PKCE (RFC 7636)
+  conforms: true
+  evidence: code_challenge_methods_supported ["S256"] on both authorization-server documents.
+- id: rfc7591
+  name: OAuth 2.0 Dynamic Client Registration (RFC 7591)
+  conforms: true
+  evidence: >-
+    registration_endpoint https://wellfound.com/api/oauth/register and
+    https://reach.wellfound.com/oauth/register declared in the respective
+    authorization-server metadata. Not exercised - the pipeline does not register clients.
+- id: rfc9207
+  name: OAuth 2.0 Authorization Server Issuer Identification (RFC 9207)
+  conforms: true
+  evidence: '"authorization_response_iss_parameter_supported": true in
+    https://wellfound.com/.well-known/openid-configuration'
+  scope: wellfound.com only - the Reach authorization server does not declare it.
+- id: rfc7009
+  name: OAuth 2.0 Token Revocation (RFC 7009)
+  conforms: true
+  evidence: revocation_endpoint declared on both authorization servers
+    (https://wellfound.com/api/oauth/revoke, https://reach.wellfound.com/oauth/revoke).
+- id: oidc
+  name: OpenID Connect Discovery 1.0
+  conforms: false
+  evidence: >-
+    https://wellfound.com/.well-known/openid-configuration returns 200 at the OIDC discovery
+    path, but the document carries no jwks_uri, no userinfo_endpoint, no
+    id_token_signing_alg_values_supported and no subject_types_supported, and "openid" is not
+    in scopes_supported. It is OAuth 2.0 authorization-server metadata served at the OIDC
+    path, not a conformant OpenID Provider configuration.
+    https://reach.wellfound.com/.well-known/openid-configuration is 404.
+- id: mcp
+  name: Model Context Protocol (remote / streamable HTTP transport)
+  conforms: true
+  evidence: >-
+    Two servers respond to JSON-RPC POSTs at https://wellfound.com/api/mcp and
+    https://reach.wellfound.com/mcp, each returning the MCP-specified 401 + RFC 9728
+    challenge when no bearer token is supplied. Both are named as `resource` in a
+    protected-resource document. Protocol version and capabilities could not be observed -
+    initialize is behind the same OAuth gate.
+- id: rfc9116
+  name: security.txt (RFC 9116)
+  conforms: false
+  evidence: >-
+    https://wellfound.com/.well-known/security.txt returns 200 text/plain but contains only a
+    comment line and "Contact: mailto:security@wellfound.com". RFC 9116 makes the Expires
+    field MANDATORY; it is absent, as are Policy, Preferred-Languages and Canonical. The
+    document is served and useful but is not a conformant security.txt.
+- id: openapi
+  name: OpenAPI
+  conforms: false
+  evidence: >-
+    No OpenAPI or Swagger document was found. Probed /openapi.json, /openapi.yaml,
+    /swagger.json, /api-docs, /docs and /redoc against wellfound.com, api.wellfound.com,
+    reach.wellfound.com and cloud.wellfound.com - every one 404, and the wellfound.com misses
+    return the site's HTML 404 shell rather than a spec.
+- id: graphql
+  name: GraphQL
+  conforms: false
+  evidence: >-
+    https://wellfound.com/graphql exists but is behind a Cloudflare managed challenge
+    (HTTP 403, cf-mitigated: challenge, "Security Check | Wellfound"). It is an internal
+    first-party endpoint, not a published API, and introspection was not attempted past the
+    challenge. https://api.wellfound.com/graphql and https://reach.wellfound.com/graphql are
+    404.
+- id: asyncapi
+  name: AsyncAPI
+  conforms: false
+  evidence: No AsyncAPI document and no published webhook catalog were found on any Wellfound
+    property.
+
+domain_standards:
+  market: recruiting / applicant tracking (HR technology)
+  shortlist_probed:
+  - id: hr-open-standards
+    name: HR Open Standards (formerly HR-XML)
+    conforms: false
+    evidence: no HR Open Standards schema, namespace or message type appears on any probed
+      Wellfound surface.
+  - id: hropen-ats
+    name: HR Open Recruiting / ATS message schemas
+    conforms: false
+    evidence: >-
+      Wellfound does not speak an ATS interchange standard at all. Its ATS connectivity is
+      brokered by Merge, a unified-API vendor, which is the commercial answer to the absence
+      of one - see
+      https://help.wellfound.com/article/1213-wellfound-ai-ats-connection-what-we-access-why-we-need-it-and-what-we-do-with-your-data
+      ("We use an ATS integration provider called Merge to support connectivity across many
+      ATS vendors and configurations").
+  - id: scim
+    name: SCIM (urn:ietf:params:scim:schemas:*)
+    conforms: false
+    evidence: no SCIM URN or /scim/v2 surface found; SSO is offered on the Scale tier
+      (https://wellfound.com/recruit/pricing) but no SCIM provisioning endpoint is published.
+  - id: schema-org-jobposting
+    name: schema.org JobPosting
+    conforms: unverified
+    evidence: >-
+      Not asserted. Wellfound's job pages are served behind a Cloudflare challenge to
+      non-browser clients, so the presence or absence of JobPosting JSON-LD could not be
+      established by probe and is left unclaimed rather than guessed.
+  note: >-
+    REWARD-ONLY dimension. Recruiting has a domain standard (HR Open Standards) and Wellfound
+    does not implement it, but the ATS market at large has largely converged on unified-API
+    brokers instead, so this is recorded as a measurement, not a penalty.
+
+compliance:
+- id: soc2
+  name: SOC 2
+  claimed: true
+  certified_by_probe: false
+  evidence: >-
+    "Both Wellfound and Merge (our ATS integration provider) are SOC 2 compliant." -
+    https://help.wellfound.com/article/1213-wellfound-ai-ats-connection-what-we-access-why-we-need-it-and-what-we-do-with-your-data
+    (HTTP 200). The report itself sits behind the Vanta trust center at
+    https://trust.wellfound.ai/ (HTTP 200), which renders client-side and could not be read
+    by probe, so the SOC 2 type and audit period are not recorded.
+- id: gdpr
+  name: GDPR
+  claimed: unverified
+  evidence: https://wellfound.com/privacy returns 200; the specific regime claims inside it
+    were not machine-extracted and are not asserted here.

@@ -1,0 +1,164 @@
+generated: '2026-09-04'
+method: probed
+source: >-
+  live HTTP probes of https://wellfound.com/api/mcp and https://reach.wellfound.com/mcp and
+  their RFC 8414 / RFC 9728 discovery documents; no OpenAPI or docs page exists to derive
+  from
+note: >-
+  Wellfound's only public API surface is two OAuth-gated MCP servers. MCP fixes most of the
+  cross-cutting semantics that this artifact normally records for a REST API - transport,
+  envelope, error shape - at the protocol level, so several fields below are answered "by
+  protocol" rather than by anything Wellfound documents. Where Wellfound itself has said
+  nothing and nothing could be observed, the field says so.
+
+auth_style:
+  model: OAuth 2.1-shaped authorization code + PKCE (S256), bearer token in the Authorization
+    header
+  machine_to_machine: not available - client_credentials is absent from grant_types_supported
+    on both authorization servers, so every token requires a human authorization step
+  detail: authentication/wellfound-authentication.yml
+  scopes: scopes/wellfound-scopes.yml
+
+idempotency:
+  coverage: none
+  mechanism: null
+  header: null
+  scope: []
+  evidence: >-
+    No Idempotency-Key header, request-key parameter or replay-protection language appears in
+    either protected-resource document, either authorization-server document, or any Wellfound
+    page found. The 401 responses from both MCP endpoints carry no idempotency-related header.
+    The write surface is real - agents:write, candidates:write, company_lists:write,
+    applications:accept and applications:reject are all mutating scopes - so this is an
+    absence with consequences, not an N/A: an agent that retries an "accept this application"
+    call after a timeout has no published way to know whether the first one landed.
+  verified_by: probe (unauthenticated); a mechanism could in principle exist behind the OAuth
+    gate and be undocumented, but nothing public asserts one.
+
+reversibility:
+  grade: unknown
+  applicable: true
+  applicable_note: >-
+    NOT read-only. Five of the sixteen published scopes are write scopes across two servers
+    (applications:accept, applications:reject, agents:write, candidates:write,
+    company_lists:write), so reversibility is in scope and cannot be marked na.
+  write_surfaces:
+  - surface: https://wellfound.com/api/mcp
+    scope: applications:accept
+    action: accept an inbound job application
+    reversal_operation: null
+    window: null
+    documented: false
+    note: >-
+      No reversal, undo or un-accept operation is published, and no window is stated. This is
+      the highest-consequence action on Wellfound's agent surface - it acts on a named human
+      being's application - and an agent calling it has no published statement of whether the
+      effect can be taken back.
+  - surface: https://wellfound.com/api/mcp
+    scope: applications:reject
+    action: reject an inbound job application
+    reversal_operation: null
+    window: null
+    documented: false
+    note: same as accept - no published reversal path and no window. Rejection is very likely
+      to trigger candidate-facing notification, but Wellfound does not say so publicly.
+  - surface: https://reach.wellfound.com/mcp
+    scope: agents:write
+    action: create or modify AI sourcing agents
+    reversal_operation: null
+    window: null
+    documented: false
+  - surface: https://reach.wellfound.com/mcp
+    scope: candidates:write
+    action: create or modify candidates
+    reversal_operation: null
+    window: null
+    documented: false
+  - surface: https://reach.wellfound.com/mcp
+    scope: company_lists:write
+    action: create or modify company lists
+    reversal_operation: null
+    window: null
+    documented: false
+  summary: >-
+    Zero of five write surfaces publish a reversal operation, and zero publish a window. No
+    window is asserted here because inventing one on an action that touches a job applicant
+    would be the most expensive possible error in this artifact. The scopes themselves are the
+    only evidence that these writes exist; the tool names and their semantics are behind the
+    OAuth gate.
+
+dry_run_mode:
+  supported: unknown
+  evidence: nothing public describes a dry-run, preview or validate-only mode; the MCP tool
+    schemas that would show one are OAuth-gated.
+
+pagination:
+  style: not published
+  evidence: no REST surface and no readable tool schemas. MCP itself defines opaque
+    cursor-based pagination (nextCursor) for list operations, which these servers presumably
+    inherit, but that is the protocol's convention and not a Wellfound statement.
+
+field_expansion:
+  supported: unknown
+
+metadata:
+  supported: unknown
+
+request_id_tracing:
+  header: x-request-id
+  observed: true
+  evidence: >-
+    Both endpoints return an x-request-id UUID on the 401 - e.g.
+    x-request-id 98ab9e6b-cd0a-4068-8914-93155c090baa from
+    POST https://wellfound.com/api/mcp, and
+    x-request-id cae8bfd4-28c7-41bc-b5f1-d1307d142b8f from
+    POST https://reach.wellfound.com/mcp. Both also return x-runtime. There is no published
+    support process that accepts a request id, so it is a usable trace handle with nowhere
+    to send it.
+
+versioning:
+  detail: lifecycle/wellfound-lifecycle.yml
+  summary: no published versioning or deprecation policy; no version segment on either
+    endpoint.
+
+error_envelope:
+  transport_level:
+    shape: flat JSON object
+    fields:
+    - error
+    - error_description
+    observed:
+    - '{"error":"invalid_token","error_description":"You must pass in an access token when
+      making this request."}  (wellfound.com/api/mcp, 401)'
+    - '{"error":"missing_or_invalid_token"}  (reach.wellfound.com/mcp, 401)'
+    - '{"error":"method_not_allowed"}  (GET wellfound.com/api/mcp, 405)'
+    - '{"error":"invalid_client","error_description":"An incorrect client_id was provided."}
+      (GET wellfound.com/api/oauth/authorize, 400)'
+    consistency: >-
+      INCONSISTENT ACROSS THE TWO SERVERS. wellfound.com uses RFC 6750 error codes
+      (invalid_token) with an error_description; reach.wellfound.com invents
+      missing_or_invalid_token, which is not an RFC 6750 code, and omits error_description
+      entirely. A client written against one server's error handling will not match the
+      other's.
+  rfc9457: false
+  rfc9457_evidence: content-type on every error observed is application/json, never
+    application/problem+json.
+  application_level: unknown - JSON-RPC error objects from the MCP layer are behind the OAuth
+    gate.
+  detail: errors/wellfound-problem-types.yml
+
+rate_limit_signaling:
+  headers: none observed
+  evidence: >-
+    No RateLimit-*, X-RateLimit-* or Retry-After header appeared on any of the ~90
+    unauthenticated requests made during this pass, including the 401s from both MCP
+    endpoints. See rate-limits/wellfound-rate-limits.yml.
+
+edge_behavior:
+  cdn: 'Cloudflare (server: cloudflare, cf-ray on every response)'
+  bot_challenge: >-
+    Cloudflare managed challenge is active on parts of wellfound.com - /graphql,
+    /company/<slug> and /reach return HTTP 403 with cf-mitigated: challenge and a "Security
+    Check | Wellfound" body to a non-browser client. The API surface itself
+    (/.well-known/*, /api/mcp) is NOT challenged and answered every probe cleanly.
+  hsts: 'enabled on wellfound.com (strict-transport-security: max-age=631139040)'

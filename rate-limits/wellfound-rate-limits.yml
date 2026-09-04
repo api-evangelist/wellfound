@@ -1,0 +1,35 @@
+generated: '2026-09-04'
+method: probed
+source: >-
+  ~90 unauthenticated HTTPS requests to wellfound.com, api.wellfound.com,
+  reach.wellfound.com, cloud.wellfound.com, help.wellfound.com and status.wellfound.com on
+  2026-09-04, response headers inspected on each
+limit_count: 0
+note: >-
+  Wellfound publishes no rate limits and returns no rate-limit headers. limit_count is an
+  honest zero: it is a measured absence, not an unchecked field.
+headers_observed: []
+headers_probed_for:
+- RateLimit
+- RateLimit-Limit
+- RateLimit-Remaining
+- RateLimit-Reset
+- RateLimit-Policy
+- X-RateLimit-Limit
+- X-RateLimit-Remaining
+- X-RateLimit-Reset
+- Retry-After
+exhaustion_status_code: not observed
+documentation:
+  url: null
+  note: >-
+    There is no API documentation of any kind on any Wellfound property, so there is no page
+    on which a limit could be published. This is a documentation absence, not a "limits exist
+    but are undocumented" case - nothing was found either way.
+limits: []
+caveat: >-
+  Both MCP endpoints are OAuth-gated, so only their 401 responses could be inspected. Limits
+  and headers may well be applied to authenticated traffic; nothing public states them and no
+  authenticated observation was made. Wellfound does sit behind Cloudflare and does run a
+  managed challenge on parts of the site (see conventions/wellfound-conventions.yml), which is
+  bot mitigation rather than a published API rate limit and is recorded as such.

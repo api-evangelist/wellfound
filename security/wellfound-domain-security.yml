@@ -1,0 +1,28 @@
+generated: '2026-09-04'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: wellfound.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct 29 19:09:42 2026 GMT
+  hsts: true
+  hsts_max_age: 631139040
+- host: reach.wellfound.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Oct 29 19:09:42 2026 GMT
+  hsts: false
+domains:
+- domain: wellfound.com
+  dnssec: false
+  caa:
+  - 0 issue "letsencrypt.org"
+  - 0 issue "pki.goog; cansignhttpexchanges=yes"
+  - 0 issue "sectigo.com"
+  - 0 issue "ssl.com"
+  - 0 issuewild "amazon.com"
+  - 0 issuewild "amazonaws.com"
+  spf: true
+  dmarc: true
+  dmarc_policy: reject

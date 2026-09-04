@@ -1,0 +1,98 @@
+generated: '2026-09-04'
+method: searched
+source: https://wellfound.com/recruit/pricing
+source_status: 200
+plan_count: 7
+currency: USD
+note: >-
+  Wellfound publishes real, priced tiers on a public page - unusual for a recruiting platform,
+  most of which are contact-sales only. NONE of these plans mention API or MCP access, and no
+  tier is described in terms of API calls, tokens or agent connections. The two MCP servers
+  are not sold as a product line; the closest signal is that ATS integration and applicant
+  sync - the surface the wellfound.com/api/mcp applications:* scopes act on - first appear on
+  the Growth tier.
+product_lines:
+- name: Job Posts
+  plans:
+  - name: Free
+    price: 0
+    currency: USD
+    period: forever
+    included: Unlimited job listings; built-in ATS or sync your own
+    overage: null
+    limits: []
+  - name: Job Ads
+    price: 200
+    price_qualifier: from $200 per ad
+    currency: USD
+    period: per-ad
+    included: Top-of-search placement and network promotion
+    overage: null
+    limits: []
+- name: Reach (AI sourcing)
+  plans:
+  - name: Explore
+    price: 0
+    currency: USD
+    period: month
+    included: 20 contact reveals per month; 3 active agents
+    overage: null
+    limits:
+    - metric: contact reveals
+      value: 20
+      window: month
+    - metric: active agents
+      value: 3
+  - name: Starter
+    price: 135
+    currency: USD
+    period: month
+    unit: per seat
+    included: 250 contact reveals per month; unlimited agents
+    overage: null
+    limits:
+    - metric: contact reveals
+      value: 250
+      window: month
+    - metric: active agents
+      value: unlimited
+  - name: Growth
+    price: 199
+    currency: USD
+    period: month
+    unit: per seat
+    included: 1,000 contact reveals per month; ATS integration and applicants
+    overage: null
+    limits:
+    - metric: contact reveals
+      value: 1000
+      window: month
+    - metric: active agents
+      value: unlimited
+  - name: Scale
+    price: null
+    price_qualifier: custom
+    currency: USD
+    period: null
+    included: Unlimited contact reveals; ATS integration and applicants; SSO
+    overage: null
+    limits:
+    - metric: contact reveals
+      value: unlimited
+- name: Autopilot (managed recruiting)
+  plans:
+  - name: Autopilot
+    price: 500
+    currency: USD
+    period: month
+    unit: per open role
+    additional_fee: 10% placement fee on hire
+    included: Dedicated 1:1 recruiter calibrated weekly; 5-10 candidates per week; no contract
+    limits: []
+api_access:
+  sold_separately: false
+  named_in_any_tier: false
+  note: >-
+    No tier names API, MCP, developer or agent access. Native two-way ATS sync with Greenhouse,
+    Lever, Ashby and Workable is stated as included free with all plans, brokered through Merge
+    - that is Wellfound CONSUMING those vendors' APIs, not Wellfound selling its own.

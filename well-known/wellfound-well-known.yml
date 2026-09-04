@@ -1,0 +1,213 @@
+generated: '2026-09-04'
+method: probed
+source: live HTTPS probes of every host this record knows (registrable domain + www, the
+  two MCP resource hosts, the docs/help host, the status host, and the trust-center host)
+note: >-
+  Wellfound serves a real, RFC-compliant discovery stack on two hosts. wellfound.com
+  publishes OpenID Connect discovery, RFC 8414 authorization-server metadata and RFC 9728
+  protected-resource metadata naming an MCP resource; reach.wellfound.com publishes its own
+  RFC 8414 + RFC 9728 pair for a second, separate MCP resource. Both hosts also serve a
+  two-line RFC 9116 security.txt. trust.wellfound.ai answered 200 with an identical HTML
+  body on EVERY /.well-known/* path probed - it is a Vanta single-page trust center with a
+  catch-all route, not a document surface, and every one of those 200s is recorded as a miss.
+  status.wellfound.com serves a security.txt, but it is Atlassian's PGP-signed vendor
+  document (Canonical https://www.atlassian.com/.well-known/security.txt), not Wellfound's,
+  so it is recorded as vendor-served and not credited to Wellfound.
+hosts:
+- host: wellfound.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: wellfound-security.txt
+  - path: /.well-known/openid-configuration
+    status: 200
+    file: wellfound-openid-configuration.json
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: wellfound-oauth-authorization-server.json
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: wellfound-oauth-protected-resource.json
+  - path: /.well-known/oauth-protected-resource/api/mcp
+    status: 200
+    file: wellfound-oauth-protected-resource.json
+    note: canonical RFC 9728 path named by the WWW-Authenticate resource_metadata challenge
+      on POST https://wellfound.com/api/mcp; identical body to the root path
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: www.wellfound.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 301
+    note: 301 to https://wellfound.com/ - www is a redirect alias, not a document host
+  - path: /.well-known/openid-configuration
+    status: 301
+  - path: /.well-known/oauth-authorization-server
+    status: 301
+  - path: /.well-known/oauth-protected-resource
+    status: 301
+  - path: /.well-known/api-catalog
+    status: 301
+  - path: /.well-known/ai-plugin.json
+    status: 301
+  - path: /.well-known/agent-card.json
+    status: 301
+  - path: /.well-known/agent.json
+    status: 301
+- host: reach.wellfound.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: wellfound-reach-security.txt
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    file: wellfound-reach-oauth-authorization-server.json
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    file: wellfound-reach-oauth-protected-resource.json
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: cloud.wellfound.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: wellfound-security.txt
+    note: byte-identical to the wellfound.com document; the rest of /.well-known/ 301s to
+      reach.wellfound.com
+  - path: /.well-known/openid-configuration
+    status: 301
+  - path: /.well-known/oauth-authorization-server
+    status: 301
+  - path: /.well-known/oauth-protected-resource
+    status: 301
+  - path: /.well-known/api-catalog
+    status: 301
+  - path: /.well-known/ai-plugin.json
+    status: 301
+  - path: /.well-known/agent-card.json
+    status: 301
+  - path: /.well-known/agent.json
+    status: 301
+- host: api.wellfound.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+  note: host resolves and answers, but every path returns a bare "404 page not found" from
+    a Go edge - no API is served here despite the hostname
+- host: help.wellfound.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: status.wellfound.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    note: >-
+      VENDOR DOCUMENT, NOT WELLFOUND'S - a PGP-signed Atlassian security.txt served by
+      Statuspage (Contact mailto:security@atlassian.com, Canonical
+      https://www.atlassian.com/.well-known/security.txt). Not saved and not credited.
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+- host: trust.wellfound.ai
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    note: >-
+      FALSE POSITIVE - a Vanta SPA catch-all returned the same 5,436-byte HTML document
+      (<title>Wellfound Trust Center</title>) for this and every other /.well-known/* path
+      probed. HTML is not a document; treated as a miss.
+  - path: /.well-known/openid-configuration
+    status: 200
+    note: same SPA catch-all HTML - miss
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    note: same SPA catch-all HTML - miss
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    note: same SPA catch-all HTML - miss
+  - path: /.well-known/api-catalog
+    status: 200
+    note: same SPA catch-all HTML - miss
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    note: same SPA catch-all HTML - miss
+  - path: /.well-known/agent-card.json
+    status: 200
+    note: same SPA catch-all HTML - miss
+  - path: /.well-known/agent.json
+    status: 200
+    note: same SPA catch-all HTML - miss
+- host: wellfound.ai
+  documents:
+  - path: /.well-known/security.txt
+    status: 302
+    note: the whole apex 302s to reach.wellfound.com; wellfound.ai is a brand alias, not a
+      document host
+  - path: /.well-known/openid-configuration
+    status: 302
+  - path: /.well-known/oauth-authorization-server
+    status: 302
+  - path: /.well-known/oauth-protected-resource
+    status: 302
+  - path: /.well-known/api-catalog
+    status: 302
+  - path: /.well-known/ai-plugin.json
+    status: 302
+  - path: /.well-known/agent-card.json
+    status: 302
+  - path: /.well-known/agent.json
+    status: 302

@@ -1,0 +1,51 @@
+generated: '2026-09-04'
+method: searched
+source: >-
+  registry.npmjs.org, pypi.org, rubygems.org, crates.io, api.github.com (org search and
+  org lookup), plus every Wellfound property probed on 2026-09-04
+package_count: 0
+official_package_count: 0
+packages: []
+note: >-
+  Wellfound ships no client library on any registry, and has no GitHub organization to ship
+  one from. This is a searched absence with the negative probes recorded below, not an
+  unchecked field.
+registries_probed:
+- registry: npm
+  queries:
+  - name: wellfound
+    result: 404 not found
+  - name: '@wellfound/mcp'
+    result: 404 not found
+  - name: wellfound-api
+    result: 404 not found
+  - name: '@angellist/api'
+    result: 404 not found
+  version: null
+  published: null
+- registry: github
+  queries:
+  - name: orgs/wellfound
+    result: 404 Not Found
+  - name: orgs/wellfoundhq
+    result: 404 Not Found
+  - name: 'search/users?q=wellfound+type:org'
+    result: >-
+      4 organizations returned (venturehacks, WellFounded-It-Solutions,
+      wellFoundedDevelopers, Wellfound-Foods) - none is Wellfound the recruiting platform.
+  version: null
+  published: null
+- registry: github
+  queries:
+  - name: orgs/angellist
+    result: >-
+      200, 47 public repos - but this org belongs to AngelList (angellist.com), the venture
+      platform Wellfound was spun out of, NOT to Wellfound. Its declared blog is
+      https://angellist.com. Deliberately NOT credited to Wellfound.
+  version: null
+  published: null
+distribution_note: >-
+  The only integration path Wellfound offers is MCP over OAuth, which needs no vendor client
+  library - an MCP client plus the RFC 9728 discovery handshake is the whole dependency. That
+  makes the absence of an SDK defensible for the remote surface, but it also means there is no
+  first-party package whose release date could serve as a currency signal for this provider.

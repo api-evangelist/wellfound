@@ -1,0 +1,88 @@
+generated: '2026-09-04'
+method: probed
+source: >-
+  HTTP responses observed live from https://wellfound.com/api/mcp,
+  https://reach.wellfound.com/mcp and https://wellfound.com/api/oauth/authorize on 2026-09-04
+format: oauth2-error
+format_note: >-
+  NOT RFC 9457. Every error body observed is a flat JSON object with `error` and sometimes
+  `error_description`, served as application/json - the RFC 6749 / RFC 6750 error shape, not
+  application/problem+json. There is no published error reference on any Wellfound property,
+  so this catalog contains only errors that were actually elicited by probe. It is a floor,
+  not a complete registry.
+
+envelope:
+  content_type: application/json
+  fields:
+  - name: error
+    required: true
+    type: string
+  - name: error_description
+    required: false
+    type: string
+    note: present on wellfound.com, absent on reach.wellfound.com
+  correlation_header: x-request-id
+  timing_header: x-runtime
+
+problem_types:
+- code: invalid_token
+  status: 401
+  surface: https://wellfound.com/api/mcp
+  title: Access token missing or invalid
+  detail: 'You must pass in an access token when making this request.'
+  rfc6750: true
+  www_authenticate: >-
+    Bearer resource_metadata="https://wellfound.com/.well-known/oauth-protected-resource/api/mcp",
+    error="invalid_token", error_description="You must pass in an access token when making
+    this request."
+  remediation: >-
+    Follow the RFC 9728 handshake - fetch the resource_metadata URL, read
+    authorization_servers[0], fetch its RFC 8414 metadata, register a client at
+    registration_endpoint or use a pre-registered client_id, run authorization_code + PKCE
+    S256 for the applications:* scopes, then retry with Authorization: Bearer <token>.
+  observed: true
+- code: missing_or_invalid_token
+  status: 401
+  surface: https://reach.wellfound.com/mcp
+  title: Access token missing or invalid
+  detail: null
+  rfc6750: false
+  rfc6750_note: >-
+    `missing_or_invalid_token` is NOT one of the RFC 6750 error codes (invalid_request,
+    invalid_token, insufficient_scope). The WWW-Authenticate header on this same response
+    correctly says error="invalid_token"; the JSON body disagrees with it. A client that
+    parses the body rather than the header will not recognise this as a token error.
+  www_authenticate: >-
+    Bearer error="invalid_token",
+    resource_metadata="https://reach.wellfound.com/.well-known/oauth-protected-resource"
+  remediation: same RFC 9728 handshake against https://reach.wellfound.com, for the
+    projects/agents/candidates/company_lists scopes.
+  observed: true
+- code: method_not_allowed
+  status: 405
+  surface: https://wellfound.com/api/mcp
+  title: HTTP method not allowed
+  detail: null
+  remediation: The MCP endpoint accepts POST with a JSON-RPC body. GET returns 405 rather than
+    opening an SSE stream, so this server does not offer the deprecated HTTP+SSE transport on
+    this path.
+  observed: true
+- code: invalid_client
+  status: 400
+  surface: https://wellfound.com/api/oauth/authorize
+  title: Unknown or missing client_id
+  detail: An incorrect client_id was provided.
+  rfc6749: true
+  remediation: Register a client at https://wellfound.com/api/oauth/register (RFC 7591 dynamic
+    client registration) or supply a client_id already issued to you.
+  observed: true
+
+not_found:
+  error_reference_page: >-
+    None. No error-code reference, status-code table or troubleshooting page exists on
+    wellfound.com, help.wellfound.com or reach.wellfound.com. Errors above 401 - insufficient
+    scope, rate limiting, validation failures on the write tools - are entirely undocumented
+    and unreachable without a token.
+  insufficient_scope: not observed; requires an authenticated token with a narrower scope set
+    than the tool being called.
+  rate_limit_error: not observed; see rate-limits/wellfound-rate-limits.yml.

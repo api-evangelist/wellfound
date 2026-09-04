@@ -1,0 +1,121 @@
+generated: '2026-09-04'
+method: probed
+source: >-
+  https://wellfound.com/.well-known/openid-configuration (200),
+  https://wellfound.com/.well-known/oauth-authorization-server (200),
+  https://wellfound.com/.well-known/oauth-protected-resource (200),
+  https://reach.wellfound.com/.well-known/oauth-authorization-server (200),
+  https://reach.wellfound.com/.well-known/oauth-protected-resource (200)
+note: >-
+  Derived from nothing - every field below was read out of a discovery document Wellfound
+  actually serves. Wellfound publishes no API reference, no authentication guide and no
+  developer portal, so these five machine-readable documents are the ONLY published
+  description of how to authenticate against Wellfound, and they are complete enough to
+  drive a client without them.
+
+summary: >-
+  Two independent OAuth 2.1-shaped authorization servers, one per product. Both are
+  authorization-code + PKCE (S256) only, both support refresh tokens, both expose RFC 7591
+  dynamic client registration, and both protect an MCP resource advertised via RFC 9728. No
+  API-key, basic-auth, mTLS or client-credentials path was found on either.
+
+schemes:
+- id: wellfound-oauth2
+  type: oauth2
+  issuer: https://wellfound.com
+  flows:
+    authorizationCode:
+      authorizationUrl: https://wellfound.com/api/oauth/authorize
+      tokenUrl: https://wellfound.com/api/oauth/token
+      refreshUrl: https://wellfound.com/api/oauth/token
+      scopes:
+        message: legacy AngelList-era scope; no current public reference documents it
+        dealflow: legacy AngelList-era scope; no current public reference documents it
+        comment: legacy AngelList-era scope; no current public reference documents it
+        email: read the authenticated member's email address
+        invest: legacy AngelList-era scope; no current public reference documents it
+        accreditation: legacy AngelList-era scope; no current public reference documents it
+        applications:read: read a recruiter's inbound job applications
+        applications:accept: accept an inbound application
+        applications:reject: reject an inbound application
+  revocation_endpoint: https://wellfound.com/api/oauth/revoke
+  registration_endpoint: https://wellfound.com/api/oauth/register
+  dynamic_client_registration: true
+  response_types_supported:
+  - code
+  grant_types_supported:
+  - authorization_code
+  - refresh_token
+  token_endpoint_auth_methods_supported:
+  - none
+  - client_secret_post
+  code_challenge_methods_supported:
+  - S256
+  pkce_required_for_public_clients: true
+  authorization_response_iss_parameter_supported: true
+  openid_connect_discovery: https://wellfound.com/.well-known/openid-configuration
+  protects:
+  - https://wellfound.com/api/mcp
+  x-note: >-
+    The scopes list is a single flat vocabulary mixing the six legacy AngelList social /
+    investing scopes with the three new recruiter-application scopes. api.angel.co and every
+    /api/1/* path now return 404, so the six legacy scopes appear to outlive the REST API
+    they were minted for. Only the three applications:* scopes appear in the
+    protected-resource document for the live MCP server.
+- id: wellfound-reach-oauth2
+  type: oauth2
+  issuer: https://reach.wellfound.com
+  flows:
+    authorizationCode:
+      authorizationUrl: https://reach.wellfound.com/oauth/authorize
+      tokenUrl: https://reach.wellfound.com/oauth/token
+      refreshUrl: https://reach.wellfound.com/oauth/token
+      scopes:
+        projects:read: read sourcing projects
+        agents:read: read AI sourcing agents
+        agents:write: create or modify AI sourcing agents
+        candidates:read: read candidates
+        candidates:write: create or modify candidates
+        company_lists:read: read company lists
+        company_lists:write: create or modify company lists
+  revocation_endpoint: https://reach.wellfound.com/oauth/revoke
+  registration_endpoint: https://reach.wellfound.com/oauth/register
+  dynamic_client_registration: true
+  response_types_supported:
+  - code
+  grant_types_supported:
+  - authorization_code
+  - refresh_token
+  token_endpoint_auth_methods_supported:
+  - none
+  code_challenge_methods_supported:
+  - S256
+  pkce_required_for_public_clients: true
+  protects:
+  - https://reach.wellfound.com/mcp
+  x-note: >-
+    token_endpoint_auth_methods_supported is ["none"] only - this server accepts PUBLIC
+    clients exclusively and has no confidential-client path. A server-side integration
+    cannot authenticate with a client secret here.
+
+token_presentation:
+  method: bearer
+  location: Authorization header
+  source: bearer_methods_supported ["header"] in both protected-resource documents
+  challenge_on_missing_token:
+    wellfound.com/api/mcp: >-
+      401 Bearer resource_metadata="https://wellfound.com/.well-known/oauth-protected-resource/api/mcp",
+      error="invalid_token"
+    reach.wellfound.com/mcp: >-
+      401 Bearer error="invalid_token",
+      resource_metadata="https://reach.wellfound.com/.well-known/oauth-protected-resource"
+
+not_found:
+- api_key: no API-key scheme documented or advertised on any probed surface
+- basic_auth: none found
+- mtls: no mtls_endpoint_aliases in either authorization-server document
+- client_credentials: absent from grant_types_supported on both servers - there is no
+    machine-to-machine path without a human authorization step
+- jwks_uri: neither authorization server publishes a jwks_uri, and neither exposes a
+    userinfo_endpoint, so the wellfound.com document is OIDC-discovery-shaped but not a
+    complete OpenID Provider

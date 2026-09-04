@@ -1,0 +1,61 @@
+generated: '2026-09-04'
+method: searched
+source: >-
+  https://trust.wellfound.ai/ (200) and
+  https://help.wellfound.com/article/1213-wellfound-ai-ats-connection-what-we-access-why-we-need-it-and-what-we-do-with-your-data
+  (200)
+trust_center:
+  url: https://trust.wellfound.ai/
+  http_status: 200
+  title: Wellfound Trust Center
+  platform: Vanta
+  platform_evidence: >-
+    The page is served from Vanta's trust-center product - assets load from
+    assets.vanta.com, the document carries data-slugid="kwb5hos99yzvm26qd1ykhz" and the
+    og:image resolves to https://app.vanta.com/doc?s=wwsuwhttugmuxiis1iz8j4.
+  domain_note: >-
+    The trust center lives on wellfound.ai, not wellfound.com. This is Wellfound's own second
+    brand - wellfound.ai / cloud.wellfound.com both redirect into reach.wellfound.com, the
+    Wellfound Reach application - and the trust center is linked from Wellfound's own help
+    center, so the different domain is confirmed first-party rather than a third party's page.
+  readable_by_machine: false
+  readable_note: >-
+    The page renders entirely client-side; every /.well-known/* path on the host returns the
+    same 5,436-byte HTML shell. Certifications, subprocessors and report metadata are behind
+    the JS render and, in Vanta's product, usually behind an NDA request as well, so the
+    document list could not be enumerated by probe.
+certifications:
+- name: SOC 2
+  status: claimed
+  verified_by_probe: false
+  evidence: >-
+    "Both Wellfound and Merge (our ATS integration provider) are SOC 2 compliant." -
+    https://help.wellfound.com/article/1213-wellfound-ai-ats-connection-what-we-access-why-we-need-it-and-what-we-do-with-your-data
+  type: not stated (Type I vs Type II not published)
+  period: not stated
+subprocessors:
+- name: Merge
+  role: ATS integration provider (unified API broker for Greenhouse, Lever, Ashby, Workable,
+    Gem and others)
+  url: https://www.merge.dev/
+  security_page: https://www.merge.dev/security
+  soc2_claimed: true
+  evidence: same help-center article; Wellfound names Merge as a subprocessor in its own words
+    ("subprocessors such as Merge").
+- name: Atlassian Statuspage
+  role: status page (status.wellfound.com)
+  evidence: page footer "Powered by Atlassian Statuspage"; the host serves Atlassian's own
+    security.txt.
+- name: Vanta
+  role: trust center hosting (trust.wellfound.ai)
+- name: Cloudflare
+  role: CDN, WAF and bot mitigation in front of every Wellfound host probed
+- name: SendGrid
+  role: transactional email (named as a monitored component on status.wellfound.com)
+- name: Iterable
+  role: marketing/lifecycle email (named as a monitored component on status.wellfound.com)
+- name: AWS
+  role: hosting, us-west-2 (named as monitored components on status.wellfound.com)
+security_contact:
+  email: security@wellfound.com
+  source: https://wellfound.com/.well-known/security.txt
