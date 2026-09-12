@@ -1,0 +1,21 @@
+{
+  "repo": "wellfound",
+  "feeds": [
+    {
+      "source": "https://wellfound.com/blog",
+      "feed_url": "https://wellfound.com/blog",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    },
+    {
+      "source": "https://help.wellfound.com/",
+      "feed_url": "https://help.wellfound.com/",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-09-06T19:17:18Z"
+}
