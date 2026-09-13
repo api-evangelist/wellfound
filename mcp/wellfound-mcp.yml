@@ -1,31 +1,28 @@
 generated: '2026-09-04'
 method: probed
-source: >-
-  https://wellfound.com/.well-known/oauth-protected-resource (HTTP 200) and
-  https://reach.wellfound.com/.well-known/oauth-protected-resource (HTTP 200), each
-  confirmed by a POST of {"jsonrpc":"2.0","id":1,"method":"tools/list"} to the resource it
-  names, which returned HTTP 401 with an RFC 9728 WWW-Authenticate challenge
+source: https://wellfound.com/.well-known/oauth-protected-resource (HTTP 200) and https://reach.wellfound.com/.well-known/oauth-protected-resource
+  (HTTP 200), each confirmed by a POST of {"jsonrpc":"2.0","id":1,"method":"tools/list"} to the resource
+  it names, which returned HTTP 401 with an RFC 9728 WWW-Authenticate challenge
 name: Wellfound MCP servers
-summary: >-
-  Wellfound runs TWO separate first-party hosted MCP servers, each with its own OAuth
-  authorization server, its own scope vocabulary and its own protected-resource document.
-  Neither is documented on any public Wellfound page that could be found - both were
-  discovered from the /.well-known/ discovery stack and verified by probe. This is the whole
-  of Wellfound's machine-readable API surface: no OpenAPI, no public GraphQL and no REST
-  reference was found anywhere (see conformance/ and the coverage note in apis.yml).
-
+summary: 'Wellfound runs TWO separate first-party hosted MCP servers, each with its own OAuth authorization
+  server, its own scope vocabulary and its own protected-resource document. Neither is documented on any
+  public Wellfound page that could be found - both were discovered from the /.well-known/ discovery stack
+  and verified by probe. This is the whole of Wellfound''s machine-readable API surface: no OpenAPI, no
+  public GraphQL and no REST reference was found anywhere (see conformance/ and the coverage note in apis.yml).'
 deployment:
   mode: remote
   endpoint: https://wellfound.com/api/mcp
   auth: oauth
   verified: probed
-  note: >-
-    Two remote endpoints exist. The `endpoint` field carries the primary
-    (wellfound.com/api/mcp); the second, https://reach.wellfound.com/mcp, is described in
-    full under servers[] below. No local-stdio package was found on npm, PyPI or any
-    Wellfound repository, and Wellfound has no GitHub organization, so `install`/`package`
-    are deliberately absent rather than empty.
-
+  note: Two remote endpoints exist. The `endpoint` field carries the primary (wellfound.com/api/mcp);
+    the second, https://reach.wellfound.com/mcp, is described in full under servers[] below. No local-stdio
+    package was found on npm, PyPI or any Wellfound repository, and Wellfound has no GitHub organization,
+    so `install`/`package` are deliberately absent rather than empty.
+  probe_prior: (never probed)
+  probe: gated
+  probe_why: RFC 9728 challenge on the MCP path only
+  checked: '2026-09-11'
+  source: claimed-backlog re-probe 2026-09-11
 servers:
 - id: wellfound-applications-mcp
   name: Wellfound recruiter applications
@@ -53,20 +50,16 @@ servers:
     probe_method: POST tools/list
     probe_url: https://wellfound.com/api/mcp
     probe_status: 401
-    www_authenticate: >-
-      Bearer resource_metadata="https://wellfound.com/.well-known/oauth-protected-resource/api/mcp",
-      error="invalid_token", error_description="You must pass in an access token when making
-      this request."
+    www_authenticate: Bearer resource_metadata="https://wellfound.com/.well-known/oauth-protected-resource/api/mcp",
+      error="invalid_token", error_description="You must pass in an access token when making this request."
     get_status: 405
     get_body: '{"error":"method_not_allowed"}'
   tools_introspected: false
-  tools_note: >-
-    tools/list is OAuth-gated. The real tool set and its inputSchemas require an
-    authenticated introspection with a token bearing the scopes above; no tool names are
-    recorded here because none were observed and none may be invented. The scope vocabulary
-    (applications:read / applications:accept / applications:reject) is the only published
-    statement of what the server can do: read a recruiter's inbound applications, and accept
-    or reject them.
+  tools_note: 'tools/list is OAuth-gated. The real tool set and its inputSchemas require an authenticated
+    introspection with a token bearing the scopes above; no tool names are recorded here because none
+    were observed and none may be invented. The scope vocabulary (applications:read / applications:accept
+    / applications:reject) is the only published statement of what the server can do: read a recruiter''s
+    inbound applications, and accept or reject them.'
 - id: wellfound-reach-mcp
   name: Wellfound Reach
   endpoint: https://reach.wellfound.com/mcp
@@ -98,21 +91,16 @@ servers:
     probe_method: POST tools/list
     probe_url: https://reach.wellfound.com/mcp
     probe_status: 401
-    www_authenticate: >-
-      Bearer error="invalid_token",
-      resource_metadata="https://reach.wellfound.com/.well-known/oauth-protected-resource"
+    www_authenticate: Bearer error="invalid_token", resource_metadata="https://reach.wellfound.com/.well-known/oauth-protected-resource"
     body: '{"error":"missing_or_invalid_token"}'
   tools_introspected: false
-  tools_note: >-
-    tools/list is OAuth-gated; no tool names observed and none invented. The seven scopes
-    describe the surface: read sourcing projects; read and write the AI sourcing agents that
-    Wellfound Reach calls "agents"; read and write candidates; read and write company lists.
-    Four of the seven are write scopes, so this is an acting surface, not a read-only one.
-
+  tools_note: 'tools/list is OAuth-gated; no tool names observed and none invented. The seven scopes describe
+    the surface: read sourcing projects; read and write the AI sourcing agents that Wellfound Reach calls
+    "agents"; read and write candidates; read and write company lists. Four of the seven are write scopes,
+    so this is an acting surface, not a read-only one.'
 aliases_probed:
-  note: >-
-    Two brand hosts resolve into the same Reach application and therefore expose the same
-    endpoint; they are aliases, not additional servers.
+  note: Two brand hosts resolve into the same Reach application and therefore expose the same endpoint;
+    they are aliases, not additional servers.
   hosts:
   - host: wellfound.ai
     result: 302 to reach.wellfound.com
@@ -122,10 +110,7 @@ aliases_probed:
     result: does not resolve
   - host: api.wellfound.com
     result: resolves; every path returns a bare 404 from a Go edge
-
 third_party_servers_excluded:
-  note: >-
-    Public search returns many "Wellfound MCP servers" on Apify and Bright Data. Every one of
-    them is a third-party SCRAPER of Wellfound's public web pages operated by another
-    company, not a Wellfound-operated server, and none is recorded here or credited to
-    Wellfound.
+  note: Public search returns many "Wellfound MCP servers" on Apify and Bright Data. Every one of them
+    is a third-party SCRAPER of Wellfound's public web pages operated by another company, not a Wellfound-operated
+    server, and none is recorded here or credited to Wellfound.
