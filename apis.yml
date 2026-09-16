@@ -28,6 +28,18 @@ tags:
 - Startups
 - MCP
 - agent-native
+- Authentication
+- AI Sourcing
+tags_raw:
+- Recruiting
+- Hiring
+- Talent
+- Human Resources
+- Applicant Tracking
+- Job Board
+- Startups
+- MCP
+- agent-native
 - OAuth
 - AI Sourcing
 maintainers:
@@ -49,6 +61,12 @@ apis:
   humanURL: https://wellfound.com/recruit/pricing
   baseURL: https://wellfound.com/api/mcp
   tags:
+  - Recruiting
+  - Applicant Tracking
+  - MCP
+  - agent-native
+  - Authentication
+  tags_raw:
   - Recruiting
   - Applicant Tracking
   - MCP
@@ -76,6 +94,13 @@ apis:
   humanURL: https://reach.wellfound.com/
   baseURL: https://reach.wellfound.com/mcp
   tags:
+  - Recruiting
+  - AI Sourcing
+  - Talent
+  - MCP
+  - agent-native
+  - Authentication
+  tags_raw:
   - Recruiting
   - AI Sourcing
   - Talent
