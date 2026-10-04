@@ -27,7 +27,7 @@ tags:
 - Job Board
 - Startups
 - MCP
-- agent-native
+- Agent-Native
 - Authentication
 - AI Sourcing
 tags_raw:
@@ -64,7 +64,7 @@ apis:
   - Recruiting
   - Applicant Tracking
   - MCP
-  - agent-native
+  - Agent-Native
   - Authentication
   tags_raw:
   - Recruiting
@@ -98,7 +98,7 @@ apis:
   - AI Sourcing
   - Talent
   - MCP
-  - agent-native
+  - Agent-Native
   - Authentication
   tags_raw:
   - Recruiting
