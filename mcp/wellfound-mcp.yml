@@ -114,3 +114,27 @@ third_party_servers_excluded:
   note: Public search returns many "Wellfound MCP servers" on Apify and Bright Data. Every one of them
     is a third-party SCRAPER of Wellfound's public web pages operated by another company, not a Wellfound-operated
     server, and none is recorded here or credited to Wellfound.
+rfc9728:
+  endpoint: https://wellfound.com/api/mcp
+  metadata_url: https://wellfound.com/.well-known/oauth-protected-resource/api/mcp
+  discovered_via: WWW-Authenticate resource_metadata on an anonymous POST initialize
+  fetched: '2026-09-25'
+  http_status: 200
+  content_type: application/json
+  document:
+    resource: https://wellfound.com/api/mcp
+    authorization_servers:
+    - https://wellfound.com
+    scopes_supported:
+    - applications:read
+    - applications:accept
+    - applications:reject
+    - moderation:read
+    - moderation:assess
+    - moderation:decide
+    - moderation:companies:read
+    - moderation:companies:assess
+    - moderation:companies:decide
+    bearer_methods_supported:
+    - header
+    resource_name: Wellfound recruiter applications
