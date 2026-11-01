@@ -64,5 +64,121 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Wellfound is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://www.hiive.com/securities/wellfound-stock
+Wellfound (formerly AngelList Talent) is a startup hiring marketplace and AI recruiting platform operating wellfound.com, the Wellfound Reach AI sourcing product and the Autopilot managed-recruiting service. Its entire public machine-readable API surface is two OAuth-protected Model Context Protocol servers - https://wellfound.com/api/mcp for recruiter applications and https://reach.wellfound.com/mcp for Reach projects, sourcing agents, candidates and company lists - discovered from a complete RFC 8414 / RFC 9728 / OpenID Connect discovery stack and verified by probe. Wellfound publishes no OpenAPI document, no public GraphQL endpoint, no REST reference and no developer portal, so the discovery documents are the only published description of how to integrate.
+
+**Areas:** Recruiting · Hiring · Talent · Human Resources · Applicant Tracking · Job Board · Startups · MCP · Agent-Native · Authentication · AI Sourcing
+
+## Wellfound on APIs.io
+
+Everything profiled for Wellfound is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/wellfound/](https://apis.io/providers/wellfound/)** — or go straight to one of the APIs or properties below.
+
+### APIs (2)
+
+- [Wellfound Applications MCP](https://apis.io/apis/wellfound/wellfound-applications-mcp/) — Remote MCP server exposing a recruiter's inbound job applications to an agent, and letting it accept or reject them. Named "Wellfound recruiter…
+- [Wellfound Reach MCP](https://apis.io/apis/wellfound/wellfound-reach-mcp/) — Remote MCP server for Wellfound Reach, the AI sourcing product. Seven scopes across four resources - projects:read, agents:read, agents:write,…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [Wellfound MCP servers](https://apis.io/servers/wellfound/wellfound-mcp-servers/)
+
+#### Security (4)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Wellfound Authentication](https://apis.io/security/wellfound/wellfound-authentication/)
+- [Wellfound Domain Security](https://apis.io/security/wellfound/wellfound-domain-security/)
+- [Wellfound Trust Center](https://apis.io/security/wellfound/wellfound-trust-center/)
+- [Wellfound Vulnerability Disclosure](https://apis.io/security/wellfound/wellfound-vulnerability-disclosure/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Wellfound Scopes](https://apis.io/scopes/wellfound/wellfound-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Wellfound Plans Pricing](https://apis.io/plans/wellfound/wellfound-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Wellfound Rate Limits](https://apis.io/rate-limits/wellfound/wellfound-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://wellfound.com/)
+- [Pricing](https://wellfound.com/recruit/pricing)
+- [Sign up](https://wellfound.com/jobs/signup)
+- [Support](https://help.wellfound.com/)
+- [Blog](https://wellfound.com/blog)
+- [Trust centre](https://trust.wellfound.ai/)
+- [Terms of service](https://wellfound.com/terms)
+- [Privacy policy](https://wellfound.com/privacy)
+- [Status](https://status.wellfound.com/)
+
+## API Evangelist rating
+
+**Kin Score 32.3** — thin · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 68.3 |
+| Contract quality | 0.0 |
+| Contract governance | 18.2 |
+| Operational transparency | 26.3 |
+| Developer ergonomics | 19.0 |
+| Access clarity | 60.5 |
+
+**Agent readiness 32.7** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | verified |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | na |
+
+**Regulatory alignment 45.1** — Employment & Payroll
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/wellfound/](https://apis.io/providers/wellfound/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Wellfound: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/wellfound/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
